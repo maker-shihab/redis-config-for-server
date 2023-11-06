@@ -98,6 +98,104 @@ const isRateLimitExceeded = async (ip) => {
 };
 ```
 
+## Leaderboards:
+
+- Use Redis sorted sets to create leaderboards for games or user rankings.
+- Example code:
+
+```js
+// Add a user's score to the leaderboard
+client.zadd("leaderboard", score, username);
+
+// Get the top N users in the leaderboard
+client.zrevrange("leaderboard", 0, N - 1, "WITHSCORES", (err, members) => {
+  console.log("Leaderboard:", members);
+});
+```
+
+## Caching HTML Fragments:
+
+- Store HTML fragments in Redis to cache dynamically generated content.
+- Example code:
+
+```js
+const cacheKey = "user-profile:1234";
+const htmlFragment = generateUserProfileHTML(userId);
+
+// Cache the HTML fragment for a set duration
+client.setex(cacheKey, 3600, htmlFragment);
+
+// Retrieve the cached HTML
+client.get(cacheKey, (err, cachedHTML) => {
+  if (cachedHTML) {
+    // Use the cached HTML
+    console.log("Cached HTML:", cachedHTML);
+  } else {
+    // Generate and cache the HTML if it's not found
+  }
+});
+```
+
+## Geospatial Indexing:
+
+- Use Redis geospatial commands to store and query location data.
+- Example code:
+
+```js
+// Add locations to Redis with latitude and longitude
+client.geoadd("locations", [
+  13.361389,
+  38.115556,
+  "Paris",
+  15.087269,
+  37.502669,
+  "Rome",
+]);
+
+// Find locations within a specified radius
+client.georadius("locations", 13.1, 37.6, 50, "km", (err, locations) => {
+  console.log("Locations within 50 km of Paris:", locations);
+});
+```
+
+## Task Queues with Redis Streams:
+
+- Use Redis Streams to implement task queues for background processing.
+- Example code:
+
+```js
+const taskStream = "tasks";
+
+// Add a task to the stream
+client.xadd(taskStream, "*", ["task", "processImage", "imageId:123"]);
+
+// Retrieve and process tasks from the stream
+client.xread("BLOCK", 0, "STREAMS", taskStream, "0", (err, streams) => {
+  const tasks = streams[0][1];
+  tasks.forEach((task) => {
+    // Process the task
+    console.log("Processing task:", task);
+  });
+});
+```
+
+## Message Queues:
+
+- Use Redis Pub-Sub to create a publish-subscribe messaging system.
+- Example code:
+
+```js
+// Publisher
+client.publish("channel", "Hello, subscribers!");
+
+// Subscriber
+const subscriber = redis.createClient();
+subscriber.subscribe("channel");
+subscriber.on("message", (channel, message) => {
+  console.log(`Received message on channel "${channel}": ${message}`);
+});
+```
+
 ## Caching User Profiles:
 
 - Use Redis to cache user profiles to reduce database queries.
