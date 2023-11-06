@@ -195,12 +195,3 @@ subscriber.on("message", (channel, message) => {
   console.log(`Received message on channel "${channel}": ${message}`);
 });
 ```
-
-## Caching User Profiles:
-
-- Use Redis to cache user profiles to reduce database queries.
-- Example code:
-
-```js
-
-```
